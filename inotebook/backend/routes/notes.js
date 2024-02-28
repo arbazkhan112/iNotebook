@@ -5,4 +5,4 @@ router.get("/", (req,res)=>{
     res.send("Notes API called");
 })
 
-module.exports = router;
+module.exports = router; 
