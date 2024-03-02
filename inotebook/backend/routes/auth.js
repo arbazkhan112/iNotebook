@@ -36,16 +36,54 @@ router.post("/createuser", [
                 password: secPass
             })
             const data = {
-                user:{
-                    id: userdata.id
+                user: {
+                    id: user.id
                 }
             }
-            const authToken = jwt.sign(data,JWT_Secret)
-            res.send({authToken: authToken});
+            const authToken = jwt.sign(data, JWT_Secret)
+            res.send({ authToken: authToken });
         }
 
     } catch (error) {
-        res.status(500).send(error)
+        console.error(error.message);
+        res.status(500).send("internal Server Error");
+    }
+})
+
+router.post("/login", [
+    body("email").isEmail(),
+    body("password").exists()
+], async (req, res) => {
+
+    const error = validationResult(req);
+    if (!error.isEmpty()) {
+        res.status(400).json({ error: error.array() });
+    }
+
+    const { email, password } = req.body
+    try {
+
+        const user = await usersModel.findOne({ email: email });
+        if (!user) {
+            return res.status(400).json({ error: "Please Enter Correct Credentials" });
+        }
+
+        const passwordCompare = await bcrypt.compare(password, user.password);
+        if (!passwordCompare) {
+            return res.status(400).json({ error: "Please Enter Correct Credentials" });
+        }
+
+        const data = {
+            user: {
+                id: user.id
+            }
+        }
+        const authToken = jwt.sign(data, JWT_Secret)
+        res.send({ authToken: authToken });
+
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send("internal Server Error");
     }
 })
 
