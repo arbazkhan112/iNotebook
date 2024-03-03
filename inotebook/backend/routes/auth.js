@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 
 const JWT_Secret = "asdfASDF1@";
 
+ 
 //Creating a user using POST "/api/auth/createuser". No login Required.
 router.post("/createuser", [
     body('name').notEmpty().isLength({ min: 3 }),
@@ -50,6 +51,9 @@ router.post("/createuser", [
     }
 })
 
+
+
+//Authenticating a user using POST "/api/auth/login". No login Required.
 router.post("/login", [
     body("email").isEmail(),
     body("password").exists()
