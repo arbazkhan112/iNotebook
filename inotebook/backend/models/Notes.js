@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 
 const notesSchema =  new mongoose.Schema({
+    user:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users"
+    },
     title:{
         type: String,
         required: true
@@ -14,7 +18,7 @@ const notesSchema =  new mongoose.Schema({
         default: "General"
     },
     date: {
-        type: date,
+        type: Date,
         default: Date.now
     }
 })
